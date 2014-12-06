@@ -15,6 +15,7 @@ public class main extends ActionBarActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout);
+	    setupResources();
 	    setupButtons();
     }
 
@@ -24,6 +25,10 @@ public class main extends ActionBarActivity implements View.OnClickListener {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+	void setupResources(){
+
+	}
 
 	void setupButtons(){
 		final Button buttonCow = (Button)findViewById( R.id.button_cow );
@@ -40,7 +45,7 @@ public class main extends ActionBarActivity implements View.OnClickListener {
 	public void onClick(View v) {
 		final int resID = getMediaResIdByButtonID( v.getId() );
 
-		MediaPlayer mediaPlayer = MediaPlayer.create(this,resID);
+		MediaPlayer mediaPlayer = getMediaPlayerByButtonID( v.getId(), resID );
 		mediaPlayer.start();
 	}
 
@@ -53,5 +58,23 @@ public class main extends ActionBarActivity implements View.OnClickListener {
 		}
 		throw new IllegalArgumentException( "buttonID is not valid" );
 	}
+
+	MediaPlayer getMediaPlayerByButtonID( final int buttonID, final int resID ){
+		int index = -1;
+		switch ( buttonID ){
+			case R.id.button_cow:   index = 0;  break;
+			case R.id.button_dog:   index = 1;  break;
+			case R.id.button_duck:  index = 2;  break;
+			case R.id.button_ass:   index = 3;  break;
+			default:
+				throw new IllegalArgumentException( "buttonID is not valid" );
+		}
+		if( m_players[ index ] == null ){
+			m_players[ index ] = MediaPlayer.create(this,resID);
+		}
+		return m_players[ index ];
+	}
+
+	MediaPlayer[] m_players = new MediaPlayer[4];
 
 }
